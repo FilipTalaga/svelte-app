@@ -1,12 +1,24 @@
 <script lang="ts">
-    import Button from './components/Button.svelte';
+    import { Router, Link, Route } from 'svelte-routing';
+    import Home from './views/Home.svelte';
+    import Dashboard from './views/Dashboard.svelte';
 
-    const me = 'Filip Talaga';
+    if ('serviceWorker' in navigator) {
+        void navigator.serviceWorker.register('../service-worker.js');
+    }
 </script>
 
 <main>
-    <h1>Hello {me}!</h1>
-    <Button />
+    <Router>
+        <nav>
+            <Link to="/">Home</Link>
+            <Link to="dashboard">Dashboard</Link>
+        </nav>
+        <div>
+            <Route path="/" component={Home} />
+            <Route path="dashboard" component={Dashboard} />
+        </div>
+    </Router>
 </main>
 
 <style>
@@ -15,13 +27,6 @@
         padding: 1em;
         max-width: 240px;
         margin: 0 auto;
-    }
-
-    h1 {
-        color: #ff3e00;
-        text-transform: uppercase;
-        font-size: 4em;
-        font-weight: 100;
     }
 
     @media (min-width: 640px) {
