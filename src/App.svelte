@@ -1,7 +1,7 @@
 <script lang="ts">
     import Button from './components/Button.svelte';
 
-    let me = 'Filip Talaga';
+    const me = 'Filip Talaga';
 </script>
 
 <main>
