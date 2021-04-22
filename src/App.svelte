@@ -1,19 +1,12 @@
 <script lang="ts">
-    export let name: string;
-    export let surname: string;
+    import Button from './components/Button.svelte';
 
-    const handleClick = () => {
-        console.log('click');
-    };
+    let me = 'Filip Talaga';
 </script>
 
 <main>
-    <h1>Hello {name} {surname}!</h1>
-    <button on:click={handleClick}> Click me </button>
-    <p>
-        Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte
-        apps.
-    </p>
+    <h1>Hello {me}!</h1>
+    <Button />
 </main>
 
 <style>
