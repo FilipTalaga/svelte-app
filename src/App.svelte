@@ -2,10 +2,6 @@
     import { Router, Link, Route } from 'svelte-routing';
     import Home from './views/Home.svelte';
     import Dashboard from './views/Dashboard.svelte';
-
-    if ('serviceWorker' in navigator) {
-        void navigator.serviceWorker.register('../service-worker.js');
-    }
 </script>
 
 <main>
@@ -15,9 +11,14 @@
             <Link to="dashboard">Dashboard</Link>
         </nav>
         <div>
-            <Route path="/" component={Home} />
-            <Route path="dashboard" component={Dashboard} />
+            <Route path="/">
+                <Home />
+            </Route>
+            <Route path="dashboard">
+                <Dashboard />
+            </Route>
         </div>
+        <p>v11</p>
     </Router>
 </main>
 

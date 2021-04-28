@@ -1,30 +1,35 @@
-var cacheName = 'svelte-app-cache-' + Date.now();
-var filesToCache = ['/', '/index.html', '/global.css', '/build/bundle.js', '/build/bundle.css'];
-self.addEventListener('install', function (e) {
-    e.waitUntil(
-        caches.open(cacheName).then(function (cache) {
-            return cache.addAll(filesToCache);
-        })
-    );
-});
-self.addEventListener('activate', e => {
-    e.waitUntil(
-        caches.keys().then(function (cacheNames) {
-            return Promise.all(
-                cacheNames.map(function (thisCacheName) {
-                    if (thisCacheName !== cacheName) {
-                        return caches.delete(thisCacheName);
-                    }
+/* Cache version */
+const cacheName = 'v1';
+
+/* Helper logger */
+const log = message => console.log(`🔥 Service Worker: ${message}`);
+
+/* Service worker event handlers */
+const eventHandlers = {
+    install: e => e.waitUntil(caches.open(cacheName).then(cache => cache.add('/'))),
+    activate: e =>
+        e.waitUntil(
+            caches
+                .keys()
+                .then(cacheNames =>
+                    Promise.all(
+                        cacheNames
+                            .filter(cache => cache !== cacheName)
+                            .map(cache => caches.delete(cache))
+                    )
+                )
+        ),
+    fetch: e =>
+        e.respondWith(
+            fetch(e.request)
+                .then(res => {
+                    const resClone = res.clone();
+                    caches.open(cacheName).then(cache => cache.put(e.request, resClone));
+                    return res;
                 })
-            );
-        })
-    );
-});
-self.addEventListener('fetch', e => {
-    e.respondWith(
-        (async function () {
-            const response = await caches.match(e.request);
-            return response || fetch(e.request);
-        })()
-    );
-});
+                .catch(() => caches.match(e.request))
+        ),
+};
+
+/* Hooking up listeners */
+Object.entries(eventHandlers).map(([event, handler]) => self.addEventListener(event, handler));
