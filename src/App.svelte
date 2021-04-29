@@ -1,9 +1,7 @@
 <script lang="ts">
     import { Router, Link, Route } from 'svelte-routing';
     import Redirect from './components/Redirect.svelte';
-    import Home from './views/Home.svelte';
-    import Dashboard from './views/Dashboard.svelte';
-    import NotFound from './views/NotFound.svelte';
+    import { routes } from './routes';
 </script>
 
 <main>
@@ -12,20 +10,16 @@
             <Link to="/">Home</Link>
             <Link to="dashboard">Dashboard</Link>
         </nav>
-        <div>
-            <Route path="index.html">
-                <Redirect to="/" />
+        {#each routes as route}
+            <Route path={route.path}>
+                {#if route.redirect}
+                    <Redirect to={route.redirect} />
+                {/if}
+                {#if route.component}
+                    <svelte:component this={route.component} />
+                {/if}
             </Route>
-            <Route path="/">
-                <Home />
-            </Route>
-            <Route path="dashboard">
-                <Dashboard />
-            </Route>
-            <Route path="*">
-                <NotFound />
-            </Route>
-        </div>
+        {/each}
     </Router>
 </main>
 
