@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "rollup -c -w",
-        "dev": "sirv public --no-clear",
+        "dev": "sirv dist --no-clear --single",
         "check": "svelte-check --fail-on-warnings --fail-on-hints",
         "lint": "eslint \"./src/**/**.{ts,js,svelte}\"",
         "validate": "npm run check && npm run lint",

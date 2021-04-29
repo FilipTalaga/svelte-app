@@ -1,9 +1,6 @@
 /* Cache version */
 const cacheName = 'v1';
 
-/* Helper logger */
-const log = message => console.log(`🔥 Service Worker: ${message}`);
-
 /* Service worker event handlers */
 const eventHandlers = {
     install: e => e.waitUntil(caches.open(cacheName).then(cache => cache.add('/'))),

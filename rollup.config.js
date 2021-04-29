@@ -69,7 +69,7 @@ export default {
         format: 'iife',
         name: 'app',
         dir: 'dist',
-        entryFileNames: 'bundle.[hash].js',
+        entryFileNames: `bundle${production ? '.[hash]' : ''}.js`,
     },
     plugins: [
         html({ template }),
