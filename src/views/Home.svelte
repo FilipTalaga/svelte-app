@@ -7,9 +7,11 @@
 <h1>Hello {me}!</h1>
 <Button />
 
-<style>
+<style lang="scss">
+    $color: #ff3e00;
+
     h1 {
-        color: #ff3e00;
+        color: $color;
         text-transform: uppercase;
         font-size: 4em;
         font-weight: 100;

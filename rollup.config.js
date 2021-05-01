@@ -90,8 +90,8 @@ export default {
 
         // Watch the `dist` directory and refresh the
         // browser on changes when not in production.
-        // 'delay: 0' causes it to refresh after `serve`
-        !production && livereload({ delay: 0, watch: 'dist' }),
+        // 'delay: 100' causes it to wait with refresh for `serve`
+        !production && livereload({ delay: 100, watch: 'dist' }),
 
         // If we're building for production (npm run build
         // instead of npm run dev), minify
