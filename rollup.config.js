@@ -25,6 +25,12 @@ export default {
         entryFileNames: production ? '[hash].js' : 'bundle.js',
     },
     plugins: [
+        /* Compiles typescript code */
+        typescript({
+            sourceMap: !production,
+            inlineSources: !production,
+        }),
+
         /* Generates index.html from predefined template and injects bundle scripts */
         html({
             template: ({ bundle }) =>
@@ -58,12 +64,6 @@ export default {
 
         /* Converts CommonJS modules to ES6, so they can be included in a Rollup bundle */
         commonjs(),
-
-        /* Compiles typescript code */
-        typescript({
-            sourceMap: !production,
-            inlineSources: !production,
-        }),
 
         !production && [
             /* Starts http server in output directory and hosts it locally */
