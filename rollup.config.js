@@ -6,41 +6,14 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
-import css from 'rollup-plugin-css-only';
+import scss from 'rollup-plugin-scss';
 import del from 'rollup-plugin-delete';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
+import fs from 'fs';
 
 const production = !process.env.ROLLUP_WATCH;
-
-const template = ({ bundle }) => `
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width,initial-scale=1" />
-            <meta name="description" content="Playground app build with Svelte" />
-            <meta name="theme-color" content="#5bd1d7" />
-
-            <title>Svelte app</title>
-
-            <link rel="manifest" href="/manifest.json" />
-            <link rel="icon" href="/assets/favicon.ico" />
-            <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-            <link rel="stylesheet" href="/global.css" />
-            <link rel="stylesheet" href="/bundle.css" />
-
-            <script>
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/service-worker.js');
-                }
-            </script>
-            ${Object.keys(bundle).map(src => `<script defer src="${src}"></script>`)}
-        </head>
-
-        <body></body>
-    </html>
-`;
+const outputDir = 'dist';
 
 export default {
     input: 'src/main.ts',
@@ -48,11 +21,20 @@ export default {
         sourcemap: !production,
         format: 'iife',
         name: 'app',
-        dir: 'dist',
-        entryFileNames: `bundle${production ? '.[hash]' : ''}.js`,
+        dir: outputDir,
+        entryFileNames: production ? '[hash].js' : 'bundle.js',
     },
     plugins: [
-        html({ template }),
+        /* Generates index.html from predefined template and injects bundle scripts */
+        html({
+            template: ({ bundle }) =>
+                fs.readFileSync('public/index.html', { encoding: 'utf-8' }).replace(
+                    /<!-- scripts to inject -->/,
+                    Object.keys(bundle).map(src => `<script defer src="${src}"></script>`)
+                ),
+        }),
+
+        /* Compiles svelete components */
         svelte({
             preprocess: sveltePreprocess({ sourceMap: !production }),
             compilerOptions: {
@@ -60,52 +42,55 @@ export default {
                 dev: !production,
             },
         }),
-        // we'll extract any component CSS out into
-        // a separate file - better for performance
-        css(),
 
-        // If you have external dependencies installed from
-        // npm, you'll most likely need these plugins. In
-        // some cases you'll need additional configuration -
-        // consult the documentation for details:
-        // https://github.com/rollup/plugins/tree/master/packages/commonjs
+        /* Parses scss, and extracts styles to separate file for performance */
+        scss({
+            output: `${outputDir}/bundle.css`,
+            prefix: `@import "./global.scss";`,
+            outputStyle: 'compressed',
+        }),
+
+        /* Locates modules using the Node resolution algorithm, for using third party modules in node_modules */
         resolve({
             browser: true,
             dedupe: ['svelte'],
         }),
+
+        /* Converts CommonJS modules to ES6, so they can be included in a Rollup bundle */
         commonjs(),
+
+        /* Compiles typescript code */
         typescript({
             sourceMap: !production,
             inlineSources: !production,
         }),
 
-        // In dev mode, call `npm run dev` once
-        // the bundle has been generated
-        !production &&
+        !production && [
+            /* Starts http server in output directory and hosts it locally */
             serve({
-                contentBase: 'dist',
+                contentBase: outputDir,
                 port: 5000,
                 open: true,
             }),
 
-        // Watch the `dist` directory and refresh the
-        // browser on changes when not in production.
-        // 'delay: 100' causes it to wait with refresh for `serve`
-        !production && livereload({ delay: 100, watch: 'dist' }),
+            /* Watches output directory and refreshes browser on changes */
+            livereload({ delay: 100, watch: outputDir }),
+        ],
 
-        // If we're building for production (npm run build
-        // instead of npm run dev), minify
-        production && terser(),
+        production && [
+            /* Clear output directory to get rid of dev files */
+            del({ targets: outputDir }),
 
-        // Clear build directory to get rid of
-        // possible sourcemap leftovers
-        production && del({ targets: 'dist' }),
+            /* Clear output directory to get rid of dev files */
+            copy({
+                targets: [{ src: 'public/**/*', dest: outputDir }],
+                flatten: false,
+            }),
 
-        copy({
-            targets: [{ src: 'public/**/*', dest: 'dist' }],
-            flatten: false,
-        }),
-    ],
+            /* Minify bundle */
+            terser(),
+        ],
+    ].flat(),
     watch: {
         clearScreen: false,
     },
