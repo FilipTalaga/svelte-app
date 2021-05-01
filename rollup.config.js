@@ -9,29 +9,9 @@ import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import del from 'rollup-plugin-delete';
 import copy from 'rollup-plugin-copy';
+import serve from 'rollup-plugin-serve';
 
 const production = !process.env.ROLLUP_WATCH;
-
-function serve() {
-    let server;
-
-    function toExit() {
-        if (server) server.kill(0);
-    }
-
-    return {
-        writeBundle() {
-            if (server) return;
-            server = require('child_process').spawn('npm', ['run', 'dev', '--', '--dev'], {
-                stdio: ['ignore', 'inherit', 'inherit'],
-                shell: true,
-            });
-
-            process.on('SIGTERM', toExit);
-            process.on('exit', toExit);
-        },
-    };
-}
 
 const template = ({ bundle }) => `
     <!DOCTYPE html>
@@ -101,11 +81,17 @@ export default {
 
         // In dev mode, call `npm run dev` once
         // the bundle has been generated
-        !production && serve(),
+        !production &&
+            serve({
+                contentBase: 'dist',
+                port: 5000,
+                open: true,
+            }),
 
         // Watch the `dist` directory and refresh the
-        // browser on changes when not in production
-        !production && livereload('dist'),
+        // browser on changes when not in production.
+        // 'delay: 0' causes it to refresh after `serve`
+        !production && livereload({ delay: 0, watch: 'dist' }),
 
         // If we're building for production (npm run build
         // instead of npm run dev), minify
