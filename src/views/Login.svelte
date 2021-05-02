@@ -3,9 +3,15 @@
     import Button from '../components/Button.svelte';
     import { navigate } from 'svelte-routing';
 
-    const handleLogin = () => login('talaga.filip@gmail.com', '').then(() => navigate('/'));
+    let email = '';
+    let password = '';
+
+    const handleLogin = () => login(email, password).then(() => navigate('/'));
 </script>
 
 <div>Login</div>
 
-<Button on:click={handleLogin}>Login</Button>
+<input bind:value={email} type="email" />
+<input bind:value={password} type="password" />
+
+<Button on:click={handleLogin} disabled={!email || !password}>Login</Button>
