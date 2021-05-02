@@ -1,15 +1,15 @@
-import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import html from '@rollup/plugin-html';
+import typescript from '@rollup/plugin-typescript';
+import svelte from 'rollup-plugin-svelte';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
-import sveltePreprocess from 'svelte-preprocess';
-import typescript from '@rollup/plugin-typescript';
 import scss from 'rollup-plugin-scss';
 import del from 'rollup-plugin-delete';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
+import sveltePreprocess from 'svelte-preprocess';
 import fs from 'fs';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -71,6 +71,7 @@ export default {
                 contentBase: outputDir,
                 port: 5000,
                 open: true,
+                historyApiFallback: '/index.html',
             }),
 
             /* Watches output directory and refreshes browser on changes */
