@@ -2,11 +2,13 @@ import { derived, readable } from 'svelte/store';
 import { fireauth } from '../firebase';
 import type firebase from 'firebase';
 
-export const user = readable<firebase.User | null>(undefined, set =>
-    fireauth.onAuthStateChanged(set)
-);
+type AuthState = firebase.User | null | undefined;
 
-export const authReady = derived(user, $user => $user !== undefined);
+const auth = readable<AuthState>(undefined, set => fireauth.onAuthStateChanged(set));
+
+export const user = derived(auth, $auth => $auth || null);
+
+export const authReady = derived(auth, $auth => $auth !== undefined);
 
 export const login = (email: string, password: string) =>
     fireauth.signInWithEmailAndPassword(email, password);

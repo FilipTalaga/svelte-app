@@ -1,25 +1,9 @@
 <script lang="ts">
-    import { Router, Route } from 'svelte-routing';
-    import Redirect from './components/Redirect.svelte';
-    import { routes } from './routes';
-    import { authReady } from './stores/auth';
+    import Router from './components/Router.svelte';
 </script>
 
 <main>
-    {#if $authReady}
-        <Router>
-            {#each routes as route}
-                <Route path={route.path}>
-                    {#if route.redirect}
-                        <Redirect to={route.redirect} />
-                    {/if}
-                    {#if route.component}
-                        <svelte:component this={route.component} />
-                    {/if}
-                </Route>
-            {/each}
-        </Router>
-    {/if}
+    <Router />
 </main>
 
 <style lang="scss">

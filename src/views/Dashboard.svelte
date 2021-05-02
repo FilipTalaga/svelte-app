@@ -4,6 +4,6 @@
 </script>
 
 <div>Dashboard</div>
-<h2>{$user.email}</h2>
+<h2>{$user?.email}</h2>
 
 <Button on:click={logout}>Logout</Button>
