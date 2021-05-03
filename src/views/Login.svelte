@@ -1,17 +1,27 @@
 <script lang="ts">
     import { login } from '../stores/auth';
-    import Button from '../components/Button.svelte';
+    import Button from '../components/ui/Button.svelte';
+    import Input from '../components/ui/Input.svelte';
     import { navigate } from 'svelte-routing';
+    import { getValues } from '../utils/form';
 
-    let email = '';
-    let password = '';
+    const loginForm = [
+        { name: 'email', value: '', type: 'email' },
+        { name: 'password', value: '', type: 'password' },
+    ];
 
-    const handleLogin = () => login(email, password).then(() => navigate('/'));
+    const submit = () => {
+        const { email, password } = getValues(loginForm);
+        login(email, password).then(() => navigate('/'));
+    };
 </script>
 
 <div>Login</div>
 
-<input bind:value={email} type="email" />
-<input bind:value={password} type="password" />
+<form on:submit|preventDefault={submit}>
+    {#each loginForm as field}
+        <Input bind:value={field.value} name={field.name} type={field.type} />
+    {/each}
 
-<Button on:click={handleLogin} disabled={!email || !password}>Login</Button>
+    <Button type="submit">Login</Button>
+</form>

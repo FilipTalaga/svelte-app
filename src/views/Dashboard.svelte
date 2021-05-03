@@ -1,6 +1,6 @@
 <script lang="ts">
     import { logout, user } from '../stores/auth';
-    import Button from '../components/Button.svelte';
+    import Button from '../components/ui/Button.svelte';
 </script>
 
 <div>Dashboard</div>
