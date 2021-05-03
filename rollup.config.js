@@ -52,7 +52,6 @@ export default {
         /* Parses scss, and extracts styles to separate file for performance */
         scss({
             output: `${outputDir}/bundle.css`,
-            prefix: `@import "./global.scss";`,
             outputStyle: 'compressed',
         }),
 
