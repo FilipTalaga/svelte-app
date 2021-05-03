@@ -12,8 +12,14 @@
 {#if $authReady}
     <Router>
         <RedirectRoute from="/" to="dashboard" />
-        <Route path="login" component={Login} />
-        <ProtectedRoute path="dashboard" component={Dashboard} guard={authGuard} />
-        <Route path="*" component={NotFound} />
+        <Route path="login">
+            <Login />
+        </Route>
+        <ProtectedRoute path="dashboard" guard={authGuard}>
+            <Dashboard />
+        </ProtectedRoute>
+        <Route path="*">
+            <NotFound />
+        </Route>
     </Router>
 {/if}
