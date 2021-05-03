@@ -20,7 +20,7 @@ const eventHandlers = {
         e.respondWith(
             fetch(e.request)
                 .then(async res => {
-                    const matches = matcher => res.type !== 'cors' && !!res.url.match(matcher);
+                    const matches = matcher => res.type === 'basic' && !!res.url.match(matcher);
 
                     const isHTML = matches(/(\/[^.]*$|^$)/);
                     const isJs = matches(/\.js$/);
