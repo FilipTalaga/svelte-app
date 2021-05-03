@@ -19,9 +19,31 @@ const eventHandlers = {
     fetch: e =>
         e.respondWith(
             fetch(e.request)
-                .then(res => {
-                    const resClone = res.clone();
-                    caches.open(cacheName).then(cache => cache.put(e.request, resClone));
+                .then(async res => {
+                    const matches = matcher => res.type !== 'cors' && !!res.url.match(matcher);
+
+                    const isHTML = matches(/(\/[^.]*$|^$)/);
+                    const isJs = matches(/\.js$/);
+                    const isCss = matches(/\.css$/);
+                    const isAsset = matches(/assets/);
+
+                    /* Cache pages, scripts, styles and assets */
+                    if (isHTML || isJs || isCss || isAsset) {
+                        const response = res.clone();
+                        const cache = await caches.open(cacheName);
+
+                        /* Delete old bundles */
+                        if (isJs) {
+                            const keys = await cache.keys();
+
+                            keys.filter(
+                                ({ url }) => url !== response.url && url.match(/\.js$/)
+                            ).forEach(key => cache.delete(key));
+                        }
+
+                        cache.put(e.request, response);
+                    }
+
                     return res;
                 })
                 .catch(() => caches.match(e.request))
