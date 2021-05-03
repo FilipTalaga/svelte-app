@@ -14,7 +14,6 @@ body {
 
 body {
     height: 100vh;
-    background-color: var(--color-surface);
 }
 
 *,
@@ -29,6 +28,7 @@ input,
 textarea,
 select {
     color: var(--color-text);
+    background-color: var(--color-surface);
 }
 
 input:-webkit-autofill,

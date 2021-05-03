@@ -1,27 +1,31 @@
 <script lang="ts">
     import { login } from '../stores/auth';
-    import Button from '../components/ui/Button.svelte';
     import Input from '../components/ui/Input.svelte';
     import { navigate } from 'svelte-routing';
     import { getValues } from '../utils/form';
+    import AsyncButton from '../components/ui/AsyncButton.svelte';
 
     const loginForm = [
         { name: 'email', value: '', type: 'email' },
         { name: 'password', value: '', type: 'password' },
     ];
 
-    const submit = () => {
+    const loginJob = () => {
         const { email, password } = getValues(loginForm);
-        login(email, password).then(() => navigate('/'));
+        return login(email, password);
     };
+
+    const goToApp = () => navigate('/');
+
+    const logError = (err: CustomEvent<unknown>) => console.log(err.detail);
 </script>
 
 <div>Login</div>
 
-<form on:submit|preventDefault={submit}>
+<form>
     {#each loginForm as field}
         <Input bind:value={field.value} name={field.name} type={field.type} />
     {/each}
 
-    <Button type="submit">Login</Button>
+    <AsyncButton job={loginJob} on:success={goToApp} on:error={logError}>Login</AsyncButton>
 </form>
