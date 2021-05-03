@@ -4,10 +4,10 @@
     "private": true,
     "scripts": {
         "start": "rollup -c -w",
-        "check": "svelte-check --fail-on-warnings --fail-on-hints",
+        "validate": "svelte-check --fail-on-warnings --fail-on-hints",
         "lint": "eslint \"./src/**/**.{ts,js,svelte}\"",
-        "validate": "npm run check && npm run lint",
-        "prebuild": "npm run validate",
+        "check": "npm run validate && npm run lint",
+        "prebuild": "npm run check",
         "build": "rollup -c",
         "predeploy": "npm run build",
         "deploy": "firebase deploy"

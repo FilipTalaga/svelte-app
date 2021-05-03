@@ -1,15 +1,8 @@
 <script lang="ts">
-    import Router from './components/Router.svelte';
+    import Router from './components/router/Router.svelte';
+    import { authReady } from './stores/auth';
 </script>
 
-<main>
+{#if $authReady}
     <Router />
-</main>
-
-<style lang="scss">
-    main {
-        text-align: center;
-        padding: 1rem;
-        margin: 0 auto;
-    }
-</style>
+{/if}

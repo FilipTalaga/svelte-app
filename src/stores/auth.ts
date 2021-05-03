@@ -1,5 +1,5 @@
 import { derived, readable } from 'svelte/store';
-import { fireauth } from '../firebase';
+import { fireauth } from '../utils/firebase';
 import type firebase from 'firebase';
 
 type AuthState = firebase.User | null | undefined;
