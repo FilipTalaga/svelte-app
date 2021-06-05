@@ -4,10 +4,10 @@
     "private": true,
     "scripts": {
         "start": "rollup -c -w",
+        "format": "prettier . --write --ignore-path .gitignore",
         "validate": "svelte-check --fail-on-warnings --fail-on-hints",
         "lint": "eslint \"./src/**/**.{ts,js,svelte}\"",
         "check": "npm run validate && npm run lint",
-        "format": "prettier . --write --ignore-path .gitignore",
         "prebuild": "npm run check",
         "build": "rollup -c",
         "predeploy": "npm run build",
@@ -25,6 +25,7 @@
         "eslint": "^7.24.0",
         "eslint-plugin-svelte3": "^3.1.2",
         "firebase": "^8.4.3",
+        "husky": "^6.0.0",
         "luxon": "^1.26.0",
         "node-sass": "^5.0.0",
         "prettier": "^2.3.1",
@@ -43,5 +44,10 @@
         "svelte-routing": "^1.6.0",
         "tslib": "^2.0.0",
         "typescript": "^4.2.4"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run format && npm run check"
+        }
     }
 }
