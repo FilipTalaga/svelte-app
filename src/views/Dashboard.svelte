@@ -7,7 +7,8 @@
     import { map } from 'rxjs/operators';
     import { DateTime } from 'luxon';
     import { getCurrencyRate } from '../stores/external';
-    import calculateInvoiceData from '../utils/invoice-calculator';
+    import { calculateInvoiceData } from '../utils/invoice-calculator';
+    import { makeDesignDoc } from '../utils/design-doc-maker';
 
     const prepareEntryInvoiceData =
         (template: EntryInvoiceData, seller: LegalEntity) => (): Observable<EntryInvoiceData> => {
@@ -33,8 +34,10 @@
 
     const generatePdf = ({ detail: entryInvoiceData }: CustomEvent<EntryInvoiceData>) => {
         const invoice = calculateInvoiceData(entryInvoiceData);
-        console.log(entryInvoiceData);
-        console.log(invoice);
+        const designDoc = makeDesignDoc(invoice);
+        const fileName = `faktura-vat-${invoice.invoiceNumber.replace(/\//g, '-')}.pdf`;
+
+        console.log(designDoc, fileName);
     };
 
 </script>

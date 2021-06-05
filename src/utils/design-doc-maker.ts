@@ -1,8 +1,7 @@
 /* eslint-disable */
-// @ts-nocheck
-import * as moment from 'moment';
-import { TDocumentDefinitions } from 'pdfmake/interfaces';
-import { ExchangeRate, Invoice } from 'src/models/invoice';
+import type { TDocumentDefinitions } from 'pdfmake/interfaces';
+import type { ExchangeRate, Invoice } from '../types/invoice';
+import { DateTime } from 'luxon';
 
 const pdfConsts = {
     margin: 20,
@@ -32,10 +31,10 @@ const makeExchangeLine = (exchangeRate: ExchangeRate, currency: string) => [
             fontSize: pdfConsts.fontSize.exchangeRate,
         },
     },
-    `. Tabela kursów średnich NBP nr ${exchangeRate.no} z dnia ${moment(
+    `. Tabela kursów średnich NBP nr ${exchangeRate.no} z dnia ${DateTime.fromFormat(
         exchangeRate.effectiveDate,
-        'YYYY-MM-DD'
-    ).format('DD-MM-YYYY')}`,
+        'yyyy-LL-dd'
+    ).toFormat('dd-LL-yyyy')}`,
 ];
 
 const makeColumn = (header: string, content: string[]) => [
@@ -66,7 +65,7 @@ const makeColumn = (header: string, content: string[]) => [
     },
 ];
 
-const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
+export const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
     ({
         content: [
             {
@@ -75,7 +74,7 @@ const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
                     [
                         makeColumn('Miejsce wystawienia', [invoice.placeOfIssue]),
                         makeColumn('Data wystawienia', [
-                            moment(invoice.dateOfIssue).format('DD-MM-YYYY'),
+                            invoice.dateOfIssue.toFormat('dd-LL-yyyy'),
                         ]),
                     ],
                 ],
@@ -230,7 +229,7 @@ const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
                                     ['Sposób płatności', invoice.paymentMethod],
                                     [
                                         'Termin płatności',
-                                        moment(invoice.paymentDeadline).format('DD-MM-YYYY'),
+                                        invoice.paymentDeadline.toFormat('dd-LL-yyyy'),
                                     ],
                                     ['Numer konta', invoice.accountNumber],
                                 ],
@@ -367,5 +366,3 @@ const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
             fontSize: pdfConsts.fontSize.text,
         },
     } as TDocumentDefinitions);
-
-export default makeDesignDoc;

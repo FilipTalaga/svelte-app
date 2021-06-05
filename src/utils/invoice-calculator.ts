@@ -1,7 +1,7 @@
 import type { EntryInvoiceData, Invoice, Product } from '../types/invoice';
 import numberToWords from './number-to-words-converter';
 
-const calculateInvoiceData = (entryInvoiceData: EntryInvoiceData): Invoice => {
+export const calculateInvoiceData = (entryInvoiceData: EntryInvoiceData): Invoice => {
     const toInvoiceProduct = (product: Product, index: number) => {
         const { name, unit, quantity, unitNetValue, taxRate } = product;
         const no = index + 1;
@@ -82,5 +82,3 @@ const calculateInvoiceData = (entryInvoiceData: EntryInvoiceData): Invoice => {
         ...rest,
     };
 };
-
-export default calculateInvoiceData;
