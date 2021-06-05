@@ -1,3 +1,5 @@
+import type { DateTime } from 'luxon';
+
 export interface Product {
     name: string;
     unit: string;
@@ -23,10 +25,17 @@ export interface ExchangeRate {
     currency: string;
 }
 
+export interface ExchangeRateTable {
+    code: string;
+    currency: string;
+    rates: Omit<ExchangeRate, 'currency'>[];
+    table: string;
+}
+
 export interface EntryInvoiceData {
     name: string;
     placeOfIssue: string;
-    dateOfIssue: Date;
+    dateOfIssue: DateTime;
     seller: LegalEntity;
     buyer: LegalEntity;
     invoiceNumber: number;
@@ -46,7 +55,7 @@ export interface EntryInvoiceData {
 
 export interface Invoice {
     placeOfIssue: string;
-    dateOfIssue: Date;
+    dateOfIssue: DateTime;
     seller: LegalEntity;
     buyer: LegalEntity;
     invoiceNumber: string;
@@ -74,7 +83,7 @@ export interface Invoice {
     };
     currency: string;
     paymentMethod: string;
-    paymentDeadline: Date;
+    paymentDeadline: DateTime;
     accountNumber: string;
     exchangeRate?: ExchangeRate;
     totalExchanged?: {

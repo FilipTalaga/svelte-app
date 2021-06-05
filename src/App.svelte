@@ -5,4 +5,6 @@
 
 {#if $authReady}
     <Router />
+{:else}
+    <div>Loading</div>
 {/if}
