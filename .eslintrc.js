@@ -28,7 +28,6 @@ module.exports = {
         'svelte3/ignore-styles': () => true,
     },
     rules: {
-        indent: ['error', 4],
         quotes: ['error', 'single'],
         semi: ['error', 'always'],
         'prefer-const': ['error'],
