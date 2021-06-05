@@ -7,6 +7,7 @@
     import { map } from 'rxjs/operators';
     import { DateTime } from 'luxon';
     import { getCurrencyRate } from '../stores/external';
+    import calculateInvoiceData from '../utils/invoice-calculator';
 
     const prepareEntryInvoiceData =
         (template: EntryInvoiceData, seller: LegalEntity) => (): Observable<EntryInvoiceData> => {
@@ -31,8 +32,11 @@
         };
 
     const generatePdf = ({ detail: entryInvoiceData }: CustomEvent<EntryInvoiceData>) => {
+        const invoice = calculateInvoiceData(entryInvoiceData);
         console.log(entryInvoiceData);
+        console.log(invoice);
     };
+
 </script>
 
 <div>Dashboard</div>
