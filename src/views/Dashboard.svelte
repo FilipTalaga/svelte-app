@@ -8,7 +8,8 @@
     import { DateTime } from 'luxon';
     import { getCurrencyRate } from '../stores/external';
     import { calculateInvoiceData } from '../utils/invoice-calculator';
-    import { makeDesignDoc } from '../utils/design-doc-maker';
+    import { createPdf } from 'pdfmake/build/pdfmake';
+    import { makeDesignDoc, tableLayouts } from '../utils/document-maker';
 
     const prepareEntryInvoiceData =
         (template: EntryInvoiceData, seller: LegalEntity) => (): Observable<EntryInvoiceData> => {
@@ -37,7 +38,7 @@
         const designDoc = makeDesignDoc(invoice);
         const fileName = `faktura-vat-${invoice.invoiceNumber.replace(/\//g, '-')}.pdf`;
 
-        console.log(designDoc, fileName);
+        createPdf(designDoc, tableLayouts).download(fileName);
     };
 
 </script>

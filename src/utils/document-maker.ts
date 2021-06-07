@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { TDocumentDefinitions } from 'pdfmake/interfaces';
+import type { CustomTableLayout, TDocumentDefinitions } from 'pdfmake/interfaces';
 import type { ExchangeRate, Invoice } from '../types/invoice';
 import { DateTime } from 'luxon';
 
@@ -64,6 +64,21 @@ const makeColumn = (header: string, content: string[]) => [
         },
     },
 ];
+
+export const tableLayouts = {
+    labelLayout: {
+        fillColor: (rowIndex: number) => (rowIndex === 0 ? '#ededed' : null),
+        hLineWidth: () => 1,
+        vLineWidth: () => 1,
+    },
+    invoiceLayout: {
+        fillColor: (rowIndex: number) => (rowIndex === 0 ? '#ededed' : null),
+    },
+    detailsLayout: {
+        hLineWidth: () => 0,
+        vLineWidth: () => 0,
+    },
+};
 
 export const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
     ({

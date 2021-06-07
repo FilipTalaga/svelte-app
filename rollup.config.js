@@ -24,6 +24,13 @@ export default {
         dir: outputDir,
         entryFileNames: production ? '[hash].js' : 'bundle.js',
     },
+    moduleContext: {
+        /*
+            Pdfmake fonts module expects top-level 'this' to be 'window', so we
+            need to override it, since rollup sets it to 'undefined' by default.
+        */
+        './node_modules/pdfmake/build/vfs_fonts.js': 'window',
+    },
     plugins: [
         /* Compiles typescript code */
         typescript({

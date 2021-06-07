@@ -3,6 +3,9 @@ import './utils/number-prototypes';
 import './utils/array-prototypes';
 import './utils/string-prototypes';
 
+/* External */
+import 'pdfmake/build/vfs_fonts';
+
 /* Application */
 import App from './App.svelte';
 
