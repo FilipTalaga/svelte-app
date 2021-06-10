@@ -1,4 +1,4 @@
-import type { DateTime } from 'luxon';
+import { DateTime } from 'luxon';
 import type { ExchangeRate, ExchangeRateTable } from '../types/invoice';
 import type { Observable } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
@@ -9,8 +9,8 @@ const get = <T>(url: string): Observable<T> =>
         selector: response => response.json(),
     });
 
-export const getCurrencyRate = (code: string, paymentDate: DateTime): Observable<ExchangeRate> => {
-    const date = paymentDate.minus({ days: 1 });
+export const getCurrencyRate = (code: string, paymentDate: Date): Observable<ExchangeRate> => {
+    const date = DateTime.fromJSDate(paymentDate).minus({ days: 1 });
     const table = 'a';
     const endDate = date.toFormat('yyyy-LL-dd');
     const startDate = date.minus({ days: 7 }).toFormat('yyyy-LL-dd');

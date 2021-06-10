@@ -26,6 +26,7 @@
             )
             .subscribe(res => dispatch(res.type, res.content));
     };
+
 </script>
 
 <div class="root">
@@ -139,4 +140,5 @@
             transition: opacity $transition-time $instant-start;
         }
     }
+
 </style>

@@ -1,4 +1,4 @@
-import type { DateTime } from 'luxon';
+import type firebase from 'firebase';
 
 export interface Product {
     name: string;
@@ -35,7 +35,7 @@ export interface ExchangeRateTable {
 export interface EntryInvoiceData {
     name: string;
     placeOfIssue: string;
-    dateOfIssue: DateTime;
+    dateOfIssue: Date;
     seller: LegalEntity;
     buyer: LegalEntity;
     invoiceNumber: number;
@@ -53,12 +53,14 @@ export interface EntryInvoiceData {
     exchangeRate?: ExchangeRate;
 }
 
-export interface Invoice {
+export interface Invoice<T = Date> {
     placeOfIssue: string;
-    dateOfIssue: DateTime;
+    dateOfIssue: T;
     seller: LegalEntity;
     buyer: LegalEntity;
-    invoiceNumber: string;
+    invoiceNumber: number;
+    month: number;
+    year: number;
     products: {
         no: number;
         name: string;
@@ -83,7 +85,7 @@ export interface Invoice {
     };
     currency: string;
     paymentMethod: string;
-    paymentDeadline: DateTime;
+    paymentDeadline: T;
     accountNumber: string;
     exchangeRate?: ExchangeRate;
     totalExchanged?: {
@@ -92,6 +94,8 @@ export interface Invoice {
         grossValue: number;
     };
 }
+
+export type InvoiceDocument = Invoice<firebase.firestore.Timestamp>;
 
 export interface TemplateDocument {
     templates: EntryInvoiceData[];

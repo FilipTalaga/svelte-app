@@ -1,6 +1,6 @@
 /* eslint-disable */
-import type { CustomTableLayout, TDocumentDefinitions } from 'pdfmake/interfaces';
-import type { ExchangeRate, Invoice } from '../types/invoice';
+import type { TDocumentDefinitions } from 'pdfmake/interfaces';
+import type { ExchangeRate, Invoice, InvoiceDocument } from '../types/invoice';
 import { DateTime } from 'luxon';
 
 const pdfConsts = {
@@ -80,7 +80,7 @@ export const tableLayouts = {
     },
 };
 
-export const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
+export const makeDesignDoc = (invoice: InvoiceDocument): TDocumentDefinitions =>
     ({
         content: [
             {
@@ -89,7 +89,9 @@ export const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
                     [
                         makeColumn('Miejsce wystawienia', [invoice.placeOfIssue]),
                         makeColumn('Data wystawienia', [
-                            invoice.dateOfIssue.toFormat('dd-LL-yyyy'),
+                            DateTime.fromJSDate(invoice.dateOfIssue.toDate()).toFormat(
+                                'dd-LL-yyyy'
+                            ),
                         ]),
                     ],
                 ],
@@ -120,7 +122,9 @@ export const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
                 },
             },
             {
-                text: `Faktura VAT ${invoice.invoiceNumber}`,
+                text: `Faktura VAT ${invoice.invoiceNumber.toDigits()}/${invoice.month.toDigits()}/${
+                    invoice.year
+                }`,
                 alignment: 'center',
                 style: {
                     fontSize: pdfConsts.fontSize.header,
@@ -244,7 +248,9 @@ export const makeDesignDoc = (invoice: Invoice): TDocumentDefinitions =>
                                     ['Sposób płatności', invoice.paymentMethod],
                                     [
                                         'Termin płatności',
-                                        invoice.paymentDeadline.toFormat('dd-LL-yyyy'),
+                                        DateTime.fromJSDate(
+                                            invoice.paymentDeadline.toDate()
+                                        ).toFormat('dd-LL-yyyy'),
                                     ],
                                     ['Numer konta', invoice.accountNumber],
                                 ],

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import type { EntryInvoiceData, Invoice, Product } from '../types/invoice';
 import numberToWords from './number-to-words-converter';
 
@@ -55,8 +56,7 @@ export const calculateInvoiceData = (entryInvoiceData: EntryInvoiceData): Invoic
         ).toDigits()}/100`,
     };
 
-    const { invoiceNumber, products, paymentDeadlineInDays, exchangeRate, ...rest } =
-        entryInvoiceData;
+    const { products, paymentDeadlineInDays, exchangeRate, ...rest } = entryInvoiceData;
 
     /* Calculate total net, tax and gross values for the foreign exchange */
     const exchangeProps = exchangeRate
@@ -70,14 +70,20 @@ export const calculateInvoiceData = (entryInvoiceData: EntryInvoiceData): Invoic
           }
         : {};
 
+    /* Get month and year of issuing date */
+    const { month, year } = DateTime.fromJSDate(entryInvoiceData.dateOfIssue);
+
     return {
         taxRatesSummary,
         total,
-        invoiceNumber: `${invoiceNumber.toDigits()}/${entryInvoiceData.dateOfIssue.toFormat(
-            'LL/yyyy'
-        )}`,
+        month,
+        year,
         products: products.map(toInvoiceProduct),
-        paymentDeadline: entryInvoiceData.dateOfIssue.plus({ days: paymentDeadlineInDays }),
+        paymentDeadline: DateTime.fromJSDate(entryInvoiceData.dateOfIssue)
+            .plus({
+                days: paymentDeadlineInDays,
+            })
+            .toJSDate(),
         ...exchangeProps,
         ...rest,
     };
