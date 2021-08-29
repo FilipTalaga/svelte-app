@@ -28,7 +28,7 @@
                 dateOfIssue,
             };
 
-            if (template.currency === 'PLN') {
+            if (template.currency === 'EUR') {
                 return of(invoiceData);
             }
 
@@ -43,7 +43,7 @@
     const generatePdf = ({ detail: entryInvoiceData }: CustomEvent<EntryInvoiceData>) => {
         const invoice = calculateInvoiceData(entryInvoiceData);
 
-        createInvoice(invoice).subscribe();
+        createInvoice(invoice).subscribe(() => window.location.reload());
     };
 
     const downloadPdf = (invoice: InvoiceDocument) => () => {
@@ -54,7 +54,6 @@
 
         createPdf(designDoc, tableLayouts).download(fileName);
     };
-
 </script>
 
 <div>Dashboard</div>
