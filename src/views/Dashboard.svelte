@@ -28,7 +28,7 @@
                 dateOfIssue,
             };
 
-            if (template.currency === 'EUR') {
+            if (template.currency === 'PLN') {
                 return of(invoiceData);
             }
 
