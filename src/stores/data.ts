@@ -19,6 +19,6 @@ export const invoices = derived(
 
 export const createInvoice = (data: Invoice) =>
     addToCollection<Invoice>('invoices/:user/documents')(
-        `${data.invoiceNumber.toDigits()}-${data.month.toDigits()}-${data.year}`,
+        `${data.year}-${data.month.toDigits()}-${data.invoiceNumber.toDigits()}`,
         data
     );

@@ -9,22 +9,17 @@
     import { calculateInvoiceData } from '../utils/invoice-calculator';
     import { createPdf } from 'pdfmake/build/pdfmake';
     import { makeDesignDoc, tableLayouts } from '../utils/document-maker';
-    import { onMount } from 'svelte';
     import Button from '../components/ui/Button.svelte';
 
-    onMount(() => {
-        invoices.subscribe(res => {
-            console.log('currentInvoices', res);
-        });
-    });
-
     const prepareEntryInvoiceData =
-        (template: EntryInvoiceData, seller: LegalEntity) => (): Observable<EntryInvoiceData> => {
+        (template: EntryInvoiceData, seller: LegalEntity, documents: InvoiceDocument[]) =>
+        (): Observable<EntryInvoiceData> => {
             const dateOfIssue = new Date();
+            const lastInvoiceNumber = Math.max(...documents.map(item => item.invoiceNumber));
             const invoiceData = {
                 ...template,
                 seller,
-                invoiceNumber: 1,
+                invoiceNumber: lastInvoiceNumber + 1,
                 dateOfIssue,
             };
 
@@ -43,7 +38,7 @@
     const generatePdf = ({ detail: entryInvoiceData }: CustomEvent<EntryInvoiceData>) => {
         const invoice = calculateInvoiceData(entryInvoiceData);
 
-        createInvoice(invoice).subscribe(() => window.location.reload());
+        createInvoice(invoice).subscribe();
     };
 
     const downloadPdf = (invoice: InvoiceDocument) => () => {
@@ -58,13 +53,16 @@
 
 <div>Dashboard</div>
 {#each $templates as template}
-    <AsyncButton job={prepareEntryInvoiceData(template, $company)} on:success={generatePdf}>
+    <AsyncButton
+        job={prepareEntryInvoiceData(template, $company, $invoices)}
+        on:success={generatePdf}
+    >
         Generate {template.name}
     </AsyncButton>
 {/each}
 {#each $invoices as invoice}
     <Button on:click={downloadPdf(invoice)}>
-        {invoice.invoiceNumber.toDigits()}-{invoice.month.toDigits()}-{invoice.year}
+        {invoice.year}-{invoice.month.toDigits()}-{invoice.invoiceNumber.toDigits()}
     </Button>
 {/each}
 
