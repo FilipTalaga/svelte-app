@@ -15,7 +15,10 @@
         (template: EntryInvoiceData, seller: LegalEntity, documents: InvoiceDocument[]) =>
         (): Observable<EntryInvoiceData> => {
             const dateOfIssue = new Date();
-            const lastInvoiceNumber = Math.max(...documents.map(item => item.invoiceNumber));
+            const lastInvoiceNumber = documents.length
+                ? Math.max(...documents.map(item => item.invoiceNumber))
+                : 0;
+
             const invoiceData = {
                 ...template,
                 seller,
