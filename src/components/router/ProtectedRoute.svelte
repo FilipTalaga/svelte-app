@@ -9,9 +9,9 @@
     $: canAccess = guard.canAccess;
 </script>
 
-<Route {path}>
+<Route {path} let:params let:location>
     {#if $canAccess}
-        <slot />
+        <slot {params} {location} />
     {:else}
         <Redirect to={guard.redirectPath} />
     {/if}

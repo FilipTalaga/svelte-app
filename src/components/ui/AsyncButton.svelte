@@ -4,6 +4,7 @@
     import { catchError, map, finalize } from 'rxjs/operators';
 
     export let job: (...params: []) => Observable<unknown>;
+    export let disabled = false;
 
     const dispatch = createEventDispatcher();
     const minDelay = 400;
@@ -26,14 +27,18 @@
             )
             .subscribe(res => dispatch(res.type, res.content));
     };
-
 </script>
 
 <div class="root">
     <svg class="svg" class:loading={isLoading}>
         <circle cx="50%" cy="50%" r="22" />
     </svg>
-    <button class:loading={isLoading} class="button" on:click={handleClick} disabled={isLoading} />
+    <button
+        class:loading={isLoading}
+        class="button"
+        on:click={handleClick}
+        disabled={isLoading || disabled}
+    />
     <p class="label" class:loading={isLoading}>
         <slot />
     </p>
@@ -95,6 +100,11 @@
                 background-color $transition-time $delayed-start,
                 border-color $transition-time $delayed-start;
         }
+
+        &:disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
     }
 
     .svg {
@@ -140,5 +150,4 @@
             transition: opacity $transition-time $instant-start;
         }
     }
-
 </style>

@@ -6,6 +6,7 @@
     import ProtectedRoute from './ProtectedRoute.svelte';
     import RedirectRoute from './RedirectRoute.svelte';
     import { authGuard } from '../../utils/authGuard';
+    import NewInvoice from '../../views/NewInvoice.svelte';
 </script>
 
 <Router>
@@ -15,6 +16,9 @@
     </Route>
     <ProtectedRoute path="dashboard" guard={authGuard}>
         <Dashboard />
+    </ProtectedRoute>
+    <ProtectedRoute path="templates/:id" let:params guard={authGuard}>
+        <NewInvoice id={+params.id} />
     </ProtectedRoute>
     <Route path="*">
         <NotFound />
