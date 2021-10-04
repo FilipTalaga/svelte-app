@@ -43,7 +43,7 @@ export default {
             template: ({ bundle }) =>
                 fs.readFileSync('public/index.html', { encoding: 'utf-8' }).replace(
                     /<!-- scripts to inject -->/,
-                    Object.keys(bundle).map(src => `<script defer src="${src}"></script>`)
+                    Object.keys(bundle).map(src => `<script defer src="/${src}"></script>`)
                 ),
         }),
 
@@ -77,7 +77,7 @@ export default {
                 contentBase: outputDir,
                 port: 5000,
                 open: true,
-                historyApiFallback: '/index.html',
+                historyApiFallback: true,
             }),
 
             /* Watches output directory and refreshes browser on changes */
