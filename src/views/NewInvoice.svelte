@@ -49,7 +49,7 @@
     const getInvoice = derived(
         [templates, company, invoices],
         ([$templates, $company, $invoices]) => {
-            if (!$templates || !$company || !$invoices.length) {
+            if (!$templates || !$company || !$invoices) {
                 return;
             }
 

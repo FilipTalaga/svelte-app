@@ -11,6 +11,7 @@ import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import sveltePreprocess from 'svelte-preprocess';
 import fs from 'fs';
+import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 const production = !process.env.ROLLUP_WATCH;
 const outputDir = 'dist';
@@ -70,6 +71,11 @@ export default {
 
         /* Converts CommonJS modules to ES6, so they can be included in a Rollup bundle */
         commonjs(),
+
+        /* Injects NODE_ENV environment variable to either 'production' or 'development' */
+        injectProcessEnv({
+            NODE_ENV: production ? 'production' : 'development',
+        }),
 
         !production && [
             /* Starts http server in output directory and hosts it locally */

@@ -7,6 +7,7 @@
     import { createPdf } from 'pdfmake/build/pdfmake';
     import { makeDesignDoc, tableLayouts } from '../utils/document-maker';
     import Button from '../components/ui/Button.svelte';
+    import Box from '../components/ui/Box.svelte';
 
     const downloadPdf = (invoice: InvoiceDocument) => () => {
         const designDoc = makeDesignDoc(invoice);
@@ -18,21 +19,33 @@
     };
 </script>
 
-<div>Dashboard</div>
-<nav>
+<Box class="root" display="flex" flexDirection="column" p={3}>
+    <Box mb={2}>
+        <h2>Templates</h2>
+    </Box>
     {#each $templates as template, i}
-        <br />
-        <br />
-        <Link to={`/templates/${i}`}>{template.name}</Link>
-        <br />
-        <br />
+        <Box mb={2}>
+            <Link to={`/templates/${i}`}>
+                <Box py={1}>
+                    {template.name}
+                </Box>
+            </Link>
+        </Box>
     {/each}
-</nav>
-{#each $invoices as invoice}
-    <Button on:click={downloadPdf(invoice)}>
-        {invoice.year}-{invoice.month.toDigits()}-{invoice.invoiceNumber.toDigits()}
-    </Button>
-{/each}
-<br />
-<br />
-<AsyncButton job={logout}>Logout</AsyncButton>
+    <Box flex={1} mb={2}>
+        {#each $invoices as invoice}
+            <Button on:click={downloadPdf(invoice)}>
+                {invoice.year}-{invoice.month.toDigits()}-{invoice.invoiceNumber.toDigits()}
+            </Button>
+        {/each}
+    </Box>
+    <Box>
+        <AsyncButton job={logout}>Logout</AsyncButton>
+    </Box>
+</Box>
+
+<style lang="scss">
+    .root {
+        height: 100%;
+    }
+</style>
